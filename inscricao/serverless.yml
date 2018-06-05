@@ -1,0 +1,90 @@
+
+service: inscricao
+
+provider:
+  name: aws
+  runtime: nodejs6.10
+  environment:
+    MY_TABLE: { Ref: myDynamoTable }
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:PutItem
+        - dynamodb:Scan
+        # New DeleteItem permission for `delete` function
+        - dynamodb:DeleteItem
+        # New permissions needed for stream
+        - dynamodb:GetRecords
+        - dynamodb:GetShardIterator
+        - dynamodb:DescribeStream
+        - dynamodb:ListStreams
+        - dynamodb:UpdateItem
+        - dynamodb:UpdateTable
+        - dynamodb:UpdateTimeToLive
+      Resource: { Fn::GetAtt: [ myDynamoTable, Arn ] }
+    - Effect: "Allow"
+      Action:
+        - sqs:GetQueueUrl
+        - sqs:DeleteMessage
+        - sqs:ListQueues
+        - sqs:ReceiveMessage
+        - sqs:SendMessage
+        - sqs:SetQueueAttributes
+      Resource: arn:aws:sqs:us-east-1:*:*
+
+functions:
+  create:
+    handler: handler.create
+    events:
+      - http:
+          path: inscricao
+          method: post
+          cors: true
+  update:
+    handler: handler.update
+    events:
+      - http:
+          path: inscricao/{id}
+          method: put
+          cors: true
+  scan:
+    handler: handler.scan
+    events:
+      - http:
+          path: inscricao
+          method: get
+          cors: true
+  # New delete function
+  delete:
+    handler: handler.delete
+    events:
+      - http:
+          path: inscricao
+          method: delete
+          cors: true
+  # New stream handler function
+  handleStream:
+    handler: handler.dynamoStreamHandler
+    events:
+      - stream:
+          type: dynamodb
+          arn: { Fn::GetAtt: [ myDynamoTable, StreamArn ] }
+          batchSize: 1
+
+resources:
+  Resources:
+    myDynamoTable:
+      Type: 'AWS::DynamoDB::Table'
+      Properties:
+        TableName: 'inscricao'
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        StreamSpecification:
+          StreamViewType: NEW_AND_OLD_IMAGES
