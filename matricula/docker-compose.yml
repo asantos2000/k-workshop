@@ -6,8 +6,8 @@ services:
         image: adsantos/matricula
         environment:
             - NODE_ENV=development
-            - AWS_ACCESS_KEY_ID=<>
-            - AWS_SECRET_ACCESS_KEY=<>
+            - AWS_ACCESS_KEY_ID=<key>
+            - AWS_SECRET_ACCESS_KEY=<access-key>
         ports:
             - 3000:3000
         links:
