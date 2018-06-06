@@ -7,7 +7,7 @@ services:
         environment:
             - NODE_ENV=development
             - AWS_ACCESS_KEY_ID=<key>
-            - AWS_SECRET_ACCESS_KEY=<access-key>
+            - AWS_SECRET_ACCESS_KEY=<secret>
         ports:
             - 3000:3000
         links:

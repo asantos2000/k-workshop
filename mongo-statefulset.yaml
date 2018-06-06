@@ -1,0 +1,54 @@
+apiVersion: apps/v1beta1
+kind: StatefulSet
+metadata:
+  name: mongodb
+spec:
+  serviceName: mongodb
+  replicas: 1
+  updateStrategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: mongodb
+    spec:
+      containers:
+        - name: mongodb
+          image: mongo:3.6
+          volumeMounts:
+            - name: data
+              mountPath: /data/db
+          ports:
+            - name: tcp
+              containerPort: 27017
+              protocol: TCP
+          livenessProbe:
+            tcpSocket:
+              port: 27017
+            initialDelaySeconds: 60
+            periodSeconds: 30
+            failureThreshold: 3
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 1Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongodb-srv
+  labels:
+    name: mongodb
+spec:
+  clusterIP: None
+  ports:
+    - name: tcp
+      port: 27017
+      targetPort: tcp
+  selector:
+    app: mongodb
