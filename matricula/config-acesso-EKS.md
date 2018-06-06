@@ -112,6 +112,6 @@ Starting to serve on 127.0.0.1:8001
 ```
 
 Acessar o [Dashboard](http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/) e inserir o token de acesso.
-   
+
 Clicar em SIGN IN
  
