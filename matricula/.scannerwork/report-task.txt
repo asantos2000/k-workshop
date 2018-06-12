@@ -1,0 +1,7 @@
+organization=asantos2000-github
+projectKey=k-workshop-matricula
+serverUrl=https://sonarcloud.io
+serverVersion=7.2.0.12953
+dashboardUrl=https://sonarcloud.io/dashboard/index/k-workshop-matricula
+ceTaskId=AWP1gmdS6E79xp0Px9Ck
+ceTaskUrl=https://sonarcloud.io/api/ce/task?id=AWP1gmdS6E79xp0Px9Ck
