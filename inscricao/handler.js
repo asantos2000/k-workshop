@@ -37,7 +37,7 @@ module.exports.create = (event, context, callback) => {
       docId: body.docId,
       name: body.name
     },
-  };
+  }
 
   // write the record to the database
   dynamoDb.put(params, (error) => {
@@ -93,7 +93,7 @@ module.exports.update = (event, context, callback) => {
       ':d' : body.docId,
       ':n' : body.name
     }
-  };
+  }
 
   console.log(params);
 
@@ -136,7 +136,7 @@ module.exports.scan = (event, context, callback) => {
     ExpressionAttributeValues: {
       ":v_email": event.queryStringParameters.email
     }
-  };
+  }
 
   console.log(params);
 
@@ -216,10 +216,11 @@ module.exports.dynamoStreamHandler = (event, context, callback) => {
 
     if (record.eventName === 'INSERT') {
       console.log('INSERT EVENT. DO WELCOME STUFF')
-    };
+    }
+    
     if (record.eventName === 'REMOVE') {
       console.log('REMOVAL EVENT. DO REMOVAL STUFF')
-    };
+    }
 
     record.dynamodb.OldImage = dynamodbTranslator.translateOutput(record.dynamodb.OldImage, ItemShape);
     record.dynamodb.NewImage  = dynamodbTranslator.translateOutput(record.dynamodb.NewImage, ItemShape);
@@ -227,20 +228,20 @@ module.exports.dynamoStreamHandler = (event, context, callback) => {
     console.log(record.dynamodb.OldImage);
     console.log(record.dynamodb.NewImage);
 
-    body = {
+    var body = {
       event: record.eventName,
       eventId: record.eventID,
       ApproximateCreationDateTime: record.dynamodb.ApproximateCreationDateTime,
       oldImage: record.dynamodb.OldImage,
       newImage: record.dynamodb.NewImage
-    };
+    }
 
     var params = {
       DelaySeconds: 10,
       //MessageBody: JSON.stringify(record.dynamodb),
       MessageBody: JSON.stringify(body),
       QueueUrl: 'https://sqs.us-east-1.amazonaws.com/523005990244/events'
-    };
+    }
 
     sqs.sendMessage(params, function (err, data) {
       if (err) {
