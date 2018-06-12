@@ -5,3 +5,4 @@ npm-debug.log
 variables.env
 data/
 **/.DS_Store
+.sonar_lock
