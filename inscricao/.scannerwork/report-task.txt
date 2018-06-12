@@ -1,7 +1,0 @@
-organization=asantos2000-github
-projectKey=k-workshop-inscricao
-serverUrl=https://sonarcloud.io
-serverVersion=7.2.0.12953
-dashboardUrl=https://sonarcloud.io/dashboard/index/k-workshop-inscricao
-ceTaskId=AWP1gNI7TzX59Iu7Ayah
-ceTaskUrl=https://sonarcloud.io/api/ce/task?id=AWP1gNI7TzX59Iu7Ayah
